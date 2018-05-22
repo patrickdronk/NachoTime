@@ -1,0 +1,5 @@
+backend/.idea
+.env
+backend/movies
+frontend/.idea
+frontend/node_modules

@@ -1,0 +1,61 @@
+Arguments: 
+  /usr/local/Cellar/node/9.10.1/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js
+
+PATH: 
+  /usr/local/opt/kibana@5.6/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Wireshark.app/Contents/MacOS
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  9.10.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "adonis-api-app",
+    "version": "4.1.0",
+    "adonis-version": "4.1.0",
+    "description": "Adonisjs boilerplate for API server with pre-configured JWT",
+    "main": "index.js",
+    "scripts": {
+      "start": "node server.js",
+      "test": "node ace test"
+    },
+    "keywords": [
+      "adonisjs",
+      "adonis-app"
+    ],
+    "author": "",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+      "@adonisjs/ace": "^5.0.1",
+      "@adonisjs/auth": "^3.0.4",
+      "@adonisjs/bodyparser": "^2.0.2",
+      "@adonisjs/cors": "^1.0.5",
+      "@adonisjs/fold": "^4.0.7",
+      "@adonisjs/framework": "^5.0.5",
+      "@adonisjs/ignitor": "^2.0.6",
+      "@adonisjs/lucid": "^5.0.3"
+    },
+    "devDependencies": {},
+    "autoload": {
+      "App": "./app"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@adonisjs%2face: ETIMEDOUT
+      at Timeout._onTimeout (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:133094:19)
+      at ontimeout (timers.js:466:11)
+      at tryOnTimeout (timers.js:304:5)
+      at Timer.listOnTimeout (timers.js:267:5)
