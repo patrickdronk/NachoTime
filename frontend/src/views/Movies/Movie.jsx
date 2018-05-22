@@ -16,6 +16,10 @@ class Movie extends Component {
         this.setState({movie: data, loading: false})
     }
 
+    download = async () => {
+        await axios.get(`http://localhost:3333/download/${this.props.match.params.id}`)
+    };
+
     render() {
         const {movie} = this.state;
         if (this.state.loading) {
@@ -48,7 +52,7 @@ class Movie extends Component {
                                             <Col xs={12} md={10}>
                                                 <h5 className="title" style={{color: 'white'}}>{movie.title}</h5>
                                                 <p style={{color: 'white'}}>{movie.synopsis}</p>
-                                                <Button color={'primary'}>Add to collection</Button>
+                                                <Button onClick={this.download} color={'primary'}>Download</Button>
                                             </Col>
                                         </Row>
                                     </CardHeader>

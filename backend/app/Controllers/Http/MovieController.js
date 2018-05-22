@@ -7,21 +7,21 @@ const srt2vtt = require('srt-to-vtt');
 const torrentService = use('TorrentService');
 const Movie = use('App/Models/Movie');
 
-class TestController {
+class MovieController {
 
-  async index({request, response}) {
+  async getMovie({request, response}) {
     const {url} = request.get();
     response.download(url)
   }
 
-  async subtitle({request, response}) {
+  async getSubtitle({request, response}) {
     const {url} = request.get();
     response.download(url)
   }
 
-  async index2({response}) {
-    const imdb_id = 'tt1825683';
-    let movieInfo = await axios.get(`https://tv-v2.api-fetch.website/movie/${imdb_id}`);
+  async downloadMovie({request, response, params}) {
+    const {id} = params;
+    let movieInfo = await axios.get(`https://tv-v2.api-fetch.website/movie/${id}`);
     movieInfo = movieInfo.data;
     let torrent;
     try {
@@ -29,19 +29,20 @@ class TestController {
     } catch (error) {
       return response.status(409).send({message: "torrent already added, please wait"})
     }
+    const extension = await torrentService.getFileExtension(torrent);
 
     await torrentService.torrentDone(torrent);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
-    const extension = torrentService.getFileExtension(torrent);
 
     const movie = new Movie();
-    movie.imdb_id = imdb_id;
+    movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
-    movie.save();
+    await movie.save();
   }
 
   async downloadSubtitle(movieName, year, extension) {
+    console.log(movieName, year, extension);
     const OpenSubtitles = new OS('TemporaryUserAgent');
     const {moviehash} = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
     let result = "";
@@ -52,7 +53,7 @@ class TestController {
       console.log(e)
     }
 
-    const subtitleUrl = result.en.url;
+    const subtitleUrl = result.nl.url;
 
     try{
       result = await axios.get(subtitleUrl);
@@ -71,4 +72,4 @@ class TestController {
   }
 }
 
-module.exports = TestController;
+module.exports = MovieController;

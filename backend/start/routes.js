@@ -19,7 +19,7 @@ Route.get('/', ({ request }) => {
   return { greeting: 'Hello world in JSON' }
 });
 
-Route.get('/test', 'TestController.index');
-Route.get('/test2', 'TestController.index2');
-Route.get('/test3', 'TestController.downloadSubtitle');
-Route.get('/subtitle', 'TestController.subtitle');
+Route.get('/movie/:id', 'MovieController.getMovie');
+Route.get('/movie/subtitle/:id', 'MovieController.getSubtitle');
+Route.get('/download/:id', 'MovieController.downloadMovie');
+
