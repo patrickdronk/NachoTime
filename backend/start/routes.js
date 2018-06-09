@@ -20,6 +20,7 @@ Route.get('/', ({ request }) => {
 });
 
 Route.get('/movie/:id', 'MovieController.getMovie');
-Route.get('/movie/subtitle/:id', 'MovieController.getSubtitle');
+Route.get('/movie/stream/:id', 'MovieController.streamMovie');
+Route.get('/movie/stream/subtitle/:id', 'MovieController.streamSubtitle');
 Route.get('/download/:id', 'MovieController.downloadMovie');
 

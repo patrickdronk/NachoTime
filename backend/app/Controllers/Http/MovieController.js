@@ -9,17 +9,25 @@ const Movie = use('App/Models/Movie');
 
 class MovieController {
 
-  async getMovie({request, response}) {
-    const {url} = request.get();
-    response.download(url)
+  async getMovie({request, response, params}) {
+    const {id} = params;
+    return await Movie.findByOrFail('imdb_id', id);
   }
 
-  async getSubtitle({request, response}) {
-    const {url} = request.get();
-    response.download(url)
+  async streamMovie({request, response, params}) {
+    const {id} = params;
+    const movie = await Movie.findBy('imdb_id', id);
+    response.download(movie.location);
+  }
+
+  async streamSubtitle({request, response, params}) {
+    const {id} = params;
+    const movie = await Movie.findBy('imdb_id', id);
+    response.download(movie.subtitle_location);
   }
 
   async downloadMovie({request, response, params}) {
+    console.log('starting downloading :)');
     const {id} = params;
     let movieInfo = await axios.get(`https://tv-v2.api-fetch.website/movie/${id}`);
     movieInfo = movieInfo.data;
@@ -31,7 +39,7 @@ class MovieController {
     }
     const extension = await torrentService.getFileExtension(torrent);
 
-    await torrentService.torrentDone(torrent);
+    await torrentService.torrentDone(torrent, movieInfo);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
 
     const movie = new Movie();
@@ -53,7 +61,7 @@ class MovieController {
       console.log(e)
     }
 
-    const subtitleUrl = result.nl.url;
+    const subtitleUrl = result.en.url;
 
     try{
       result = await axios.get(subtitleUrl);

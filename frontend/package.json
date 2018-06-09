@@ -4,7 +4,9 @@
   "private": true,
   "homepage": "https://timcreative.github.io/now-ui-dashboard-react",
   "dependencies": {
+    "@adonisjs/websocket-client": "^1.0.9",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "4.0.0-beta",
     "chart.js": "2.7.1",
     "history": "4.7.2",
@@ -19,6 +21,7 @@
     "react-google-maps": "9.2.2",
     "react-loading": "^2.0.2",
     "react-notification-alert": "0.0.7",
+    "react-player": "^1.6.1",
     "react-router-dom": "4.2.2",
     "react-scripts": "1.0.17",
     "reactstrap": "5.0.0-alpha.4"

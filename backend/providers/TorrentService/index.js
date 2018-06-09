@@ -1,6 +1,7 @@
 const WebTorrent = require('webtorrent');
 const Helpers = use('Helpers');
 const fs = require('fs-extra');
+const Event = use('Event');
 
 class TorrentClient {
   constructor() {
@@ -11,7 +12,10 @@ class TorrentClient {
     return new Promise((resolve, reject) => {
       try {
         if (this._client.get(magnetURI) === null) {
+          console.log('adding magnet');
           this._client.add(magnetURI, {path: Helpers.tmpPath() + '/movies'}, function (torrent) {
+            console.log('added torrent')
+            console.log(torrent);
             resolve(torrent);
           })
         } else {
@@ -24,14 +28,15 @@ class TorrentClient {
     });
   }
 
-  async torrentDone(torrent) {
+  async torrentDone(torrent, movieInfo) {
 
     let currentPercentage = 0;
     torrent.on('download', function (bytes) {
       let newPercentage = Math.round(torrent.progress * 100);
       if (newPercentage > currentPercentage) {
         currentPercentage = newPercentage;
-        console.log('progress: ' + newPercentage)
+        Event.emit('progress', {movieTitle: movieInfo.title, newPercentage});
+        console.log(`progress: ${newPercentage} movie: ${movieInfo.title}`)
       }
     });
 
