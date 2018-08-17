@@ -14,6 +14,10 @@ class MovieController {
     return await Movie.findByOrFail('imdb_id', id);
   }
 
+  async getAllMovies() {
+    return Movie.all();
+  }
+
   async streamMovie({request, response, params}) {
     const {id} = params;
     const movie = await Movie.findBy('imdb_id', id);
@@ -21,13 +25,12 @@ class MovieController {
   }
 
   async streamSubtitle({request, response, params}) {
-    const {id} = params;
+    const {id, language} = params;
     const movie = await Movie.findBy('imdb_id', id);
-    response.download(movie.subtitle_location);
+    response.download(movie.subtitle_location + `${language}.vtt`);
   }
 
   async downloadMovie({request, response, params}) {
-    console.log('starting downloading :)');
     const {id} = params;
     let movieInfo = await axios.get(`https://tv-v2.api-fetch.website/movie/${id}`);
     movieInfo = movieInfo.data;
@@ -41,11 +44,12 @@ class MovieController {
 
     await torrentService.torrentDone(torrent, movieInfo);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
+    this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
     const movie = new Movie();
     movie.imdb_id = id;
     movie.location = location;
-    movie.subtitle_location = await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
+    movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
     await movie.save();
   }
 
@@ -61,20 +65,35 @@ class MovieController {
       console.log(e)
     }
 
+    console.log(result);
     const subtitleUrl = result.en.url;
+    const dutchSubtitleUrl = result.nl;
 
-    try{
-      result = await axios.get(subtitleUrl);
+    let englishSubtitle;
+    let dutchSubtitle;
+    try {
+      englishSubtitle = await axios.get(subtitleUrl);
+      // dutch is not always optional so only get it if it's there
+      if (dutchSubtitleUrl) {
+        dutchSubtitle = await axios.get(dutchSubtitleUrl.url);
+      }
     } catch (e) {
       console.log(e)
     }
+    this.writeSubtitleToLocation(movieName, year, 'en', englishSubtitle);
+    if (dutchSubtitleUrl) {
+      this.writeSubtitleToLocation(movieName, year, 'nl', dutchSubtitle);
+    }
+  }
 
-    fs.writeFileSync(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}.srt`, result.data);
+  async writeSubtitleToLocation(movieName, year, lang, data) {
+    //
+    fs.writeFileSync(`${Helpers.appRoot()}/movies/${movieName} (${year})/${lang}.srt`, data.data);
 
-    fs.createReadStream(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}.srt`)
+    fs.createReadStream(`${Helpers.appRoot()}/movies/${movieName} (${year})/${lang}.srt`)
       .pipe(srt2vtt())
-      .pipe(fs.createWriteStream(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}.vtt`));
-    await fs.remove(Helpers.tmpPath() + `/movies/${movieName} (${year})/${movieName}.srt`);
+      .pipe(fs.createWriteStream(`${Helpers.appRoot()}/movies/${movieName} (${year})/${lang}.vtt`));
+    await fs.remove(Helpers.tmpPath() + `/movies/${movieName} (${year})/${lang}.srt`);
 
     return `${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}.vtt`;
   }

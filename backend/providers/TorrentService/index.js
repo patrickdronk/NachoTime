@@ -14,8 +14,7 @@ class TorrentClient {
         if (this._client.get(magnetURI) === null) {
           console.log('adding magnet');
           this._client.add(magnetURI, {path: Helpers.tmpPath() + '/movies'}, function (torrent) {
-            console.log('added torrent')
-            console.log(torrent);
+            console.log('added torrent');
             resolve(torrent);
           })
         } else {
@@ -62,7 +61,14 @@ class TorrentClient {
 
   async moveFilesToMovieDirectory(torrent, movieInfo) {
     const torrentName = await this.getFileNameOfMovie(torrent);
-    const fileLocation = `/${torrent.name}/${torrentName}`;
+    // there is a problem here; in certain scenarios only the movie is being downloaded.
+    let fileLocation;
+    if(torrent.name.endsWith('mp4') || torrent.name.endsWith('mkv')) {
+      fileLocation = `/${torrentName}`;
+    } else {
+      fileLocation = `/${torrent.name}/${torrentName}`;
+    }
+
     const extension = torrentName.substring(torrentName.lastIndexOf('.'));
     const oldPath = torrent.path + fileLocation;
     const newPath = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/${movieInfo.title}${extension}`;

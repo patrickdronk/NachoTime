@@ -25,6 +25,7 @@ class Dashboard extends React.Component {
     const chat = ws.subscribe('progress');
 
     chat.on('message', (progress) => {
+
       this.setState({progress});
     });
   }
@@ -51,14 +52,13 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <div className="wrapper">
           <Sidebar {...this.props} routes={dashboardRoutes}/>
           <div className="main-panel" ref="mainPanel">
             <Header {...this.props}/>
-            {this.state.progress &&
+            {this.state.progress && this.state.progress >= 100 &&
             <Alert color="info" style={{width: '600', zIndex: 1,  position: 'fixed', top: '1em', right: '1em'}}>
               <p>{this.state.progress.movieTitle}</p>
               <div className="text-center">{this.state.progress.newPercentage}%</div>

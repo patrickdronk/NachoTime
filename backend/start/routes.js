@@ -19,8 +19,9 @@ Route.get('/', ({ request }) => {
   return { greeting: 'Hello world in JSON' }
 });
 
+Route.get('/movies', 'MovieController.getAllMovies');
 Route.get('/movie/:id', 'MovieController.getMovie');
 Route.get('/movie/stream/:id', 'MovieController.streamMovie');
-Route.get('/movie/stream/subtitle/:id', 'MovieController.streamSubtitle');
+Route.get('/movie/stream/subtitle/:id/:language', 'MovieController.streamSubtitle');
 Route.get('/download/:id', 'MovieController.downloadMovie');
 
