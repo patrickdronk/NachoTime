@@ -51,8 +51,12 @@ class MovieController {
     movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
-    await movie.save();
     console.log('comming here2');
+    try {
+      await movie.save();
+    } catch(e) {
+      console.log(e)
+    }
   }
 
   async downloadSubtitle(movieName, year, extension) {
