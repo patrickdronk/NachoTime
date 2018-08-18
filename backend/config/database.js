@@ -59,6 +59,24 @@ module.exports = {
 
   /*
   |--------------------------------------------------------------------------
+  | MariaDB
+  |--------------------------------------------------------------------------
+  |
+  */
+  mariadb: {
+    client: 'mariadb',
+    connection: {
+      host: Env.get('DB_HOST', 'localhost'),
+      port: Env.get('DB_PORT', ''),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', ''),
+      db: Env.get('DB_DATABASE', 'adonis')
+    },
+    debug: Env.get('DB_DEBUG', false)
+  },
+
+  /*
+  |--------------------------------------------------------------------------
   | PostgreSQL
   |--------------------------------------------------------------------------
   |
