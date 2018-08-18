@@ -29,7 +29,6 @@ class TorrentClient {
   }
 
   async torrentDone(torrent, movieInfo) {
-
     let currentPercentage = 0;
     torrent.on('download', function (bytes) {
       let newPercentage = Math.round(torrent.progress * 100);

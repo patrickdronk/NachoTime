@@ -47,7 +47,6 @@ class MovieController {
     await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
     console.log('comming here');
-    const movie = new Movie();
     movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
@@ -62,7 +61,10 @@ class MovieController {
   async downloadSubtitle(movieName, year, extension) {
     console.log(movieName, year, extension);
     const OpenSubtitles = new OS('TemporaryUserAgent');
-    const {moviehash} = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
+    try {
+      const {moviehash} = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
+    } catch(e) {console.log}
+
     let result = "";
 
     try {
