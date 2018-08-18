@@ -14,7 +14,7 @@ class ProgressController {
       console.log('progressController torrent.added');
       console.log(info);
         try {
-          this.socket.broadcastToAll('torrent.added', JSON.stringify(info));
+          this.socket.broadcastToAll('torrent.added', 'new torrent');
         } catch(e) {console.log}
     });
   }
