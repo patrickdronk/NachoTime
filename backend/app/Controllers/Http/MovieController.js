@@ -61,12 +61,14 @@ class MovieController {
   async downloadSubtitle(movieName, year, extension) {
     console.log(movieName, year, extension);
     const OpenSubtitles = new OS('TemporaryUserAgent');
+    let moviehash;
     try {
-      const {moviehash} = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
+      const temp = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
+      moviehash = temp.moviehash;
+
     } catch(e) {console.log}
 
-    let result = "";
-
+    let result = '';
     try {
       result = await OpenSubtitles.search({hash: moviehash});
     } catch (e) {
