@@ -2,14 +2,14 @@
 const Event = use('Event');
 
 class ProgressController {
-  constructor ({ socket }) {
+  constructor({socket}) {
     this.socket = socket;
-    Event.on('progress', (info) => {
-      try{
-        this.socket.broadcastToAll('message', info);
-      } catch(e) {
-        //we probably have nobody to notify when we come here xD
-      }
+    Event.on('torrent.progress', (info) => {
+      this.socket.broadcastToAll('torrent.progress', info);
+    });
+
+    Event.on('torrent.added', (info) => {
+      this.socket.broadcastToAll('torrent.added', info)
     });
   }
 }

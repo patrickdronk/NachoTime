@@ -14,6 +14,7 @@ class TorrentClient {
         if (this._client.get(magnetURI) === null) {
           console.log('adding magnet');
           this._client.add(magnetURI, {path: Helpers.tmpPath() + '/movies'}, function (torrent) {
+            Event.emit('torrent.added', torrent);
             console.log('added torrent');
             resolve(torrent);
           })
@@ -34,7 +35,7 @@ class TorrentClient {
       let newPercentage = Math.round(torrent.progress * 100);
       if (newPercentage > currentPercentage) {
         currentPercentage = newPercentage;
-        Event.emit('progress', {movieTitle: movieInfo.title, newPercentage});
+        Event.emit('torrent.progress', {movieTitle: movieInfo.title, newPercentage});
         console.log(`progress: ${newPercentage} movie: ${movieInfo.title}`)
       }
     });

@@ -15,4 +15,4 @@
 
 const Ws = use('Ws');
 
-Ws.channel('progress', 'ProgressController');
+Ws.channel('torrent', 'ProgressController');
