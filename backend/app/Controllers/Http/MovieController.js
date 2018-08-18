@@ -47,6 +47,7 @@ class MovieController {
     await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
     console.log('comming here');
+    const movie = new Movie();
     movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
