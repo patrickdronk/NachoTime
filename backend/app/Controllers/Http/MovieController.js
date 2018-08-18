@@ -60,8 +60,9 @@ class MovieController {
 
   async downloadSubtitle(movieName, year, extension) {
     console.log(movieName, year, extension);
+    let OpenSubtitles;
     try {
-      const OpenSubtitles = new OS('TemporaryUserAgent');
+      OpenSubtitles = new OS('TemporaryUserAgent');
     } catch (e) {
       console.log(e)
     }
@@ -72,9 +73,7 @@ class MovieController {
       moviehash = temp.moviehash;
     } catch(e) {console.log}
 
-    let result = '';
-
-      result = await OpenSubtitles.search({hash: moviehash});
+    let result = await OpenSubtitles.search({hash: moviehash});
 
     console.log(result);
     const subtitleUrl = result.en.url;
