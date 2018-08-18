@@ -9,6 +9,7 @@ class ProgressController {
     });
 
     Event.on('torrent.added', (info) => {
+      console.log('progressController torrent.added');
       this.socket.broadcastToAll('torrent.added', info)
     });
   }
