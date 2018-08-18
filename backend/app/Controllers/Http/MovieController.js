@@ -44,7 +44,7 @@ class MovieController {
 
     await torrentService.torrentDone(torrent, movieInfo);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
-    this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
+    await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
     console.log('comming here');
     const movie = new Movie();
