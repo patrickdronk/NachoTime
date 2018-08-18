@@ -52,6 +52,7 @@ class MovieController {
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
     await movie.save();
+    console.log('comming here2');
   }
 
   async downloadSubtitle(movieName, year, extension) {
