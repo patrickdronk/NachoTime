@@ -15,13 +15,21 @@
 
 const Route = use('Route');
 
-Route.get('/', ({ request }) => {
+Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 });
+Route.post('/login', 'UserController.login');
+Route.post('/register', 'UserController.register')
 
-Route.get('/movies', 'MovieController.getAllMovies');
-Route.get('/movie/:id', 'MovieController.getMovie');
-Route.get('/movie/stream/:id', 'MovieController.streamMovie');
-Route.get('/movie/stream/subtitle/:id/:language', 'MovieController.streamSubtitle');
-Route.get('/download/:id', 'MovieController.downloadMovie');
+Route
+  .group(() => {
+    Route.get('/movies', 'MovieController.getAllMovies');
+    Route.get('/movie/:id', 'MovieController.getMovie');
+    Route.get('/movie/stream/:id', 'MovieController.streamMovie');
+    Route.get('/movie/stream/subtitle/:id/:language', 'MovieController.streamSubtitle');
+    Route.get('/download/:id', 'MovieController.downloadMovie');
+  })
+  .middleware(['auth'])
+
+
 
