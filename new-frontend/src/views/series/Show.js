@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from "axios/index";
+import * as _ from 'lodash'
 import {Card, Col, Row, Spin, List, Button} from "antd";
 import ReactPlayer from "react-player";
 
@@ -124,7 +125,7 @@ class Show extends Component {
                                                               width={''}
                                                               height={''}
                                                             />
-                                                            :
+                                                            : !_.isEmpty(this.state.selectedEpisode.torrent) &&
                                                             <Button onClick={this.download}
                                                                     color={'primary'}
                                                                     loading={this.state.downloading}

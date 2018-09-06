@@ -95,7 +95,7 @@ class Movies extends Component {
 
     renderMovies = () => {
         return (
-          <div style={{height: '(100vh -300px)  ', overflow: 'auto'}}>
+          <div style={{height: '700px  ', overflow: 'auto'}}>
               <InfiniteScroll
                 pageStart={1}
                 loadMore={this.loadMore}

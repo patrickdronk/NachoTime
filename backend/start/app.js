@@ -18,6 +18,9 @@ const providers = [
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/lucid/providers/LucidProvider',
   '@adonisjs/websocket/providers/WsProvider',
+  '@adonisjs/mail/providers/MailProvider',
+  '@adonisjs/framework/providers/ViewProvider',
+
   path.join(__dirname, '..', 'providers', 'TorrentService/provider'),
   path.join(__dirname, '..', 'providers', 'TMDBService/provider')
 ]
