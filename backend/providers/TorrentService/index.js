@@ -41,7 +41,6 @@ class TorrentClient {
 
     return new Promise((resolve, reject) => {
       torrent.on('done', function () {
-        console.log('done?');
         resolve(true);
       });
     });
@@ -87,6 +86,34 @@ class TorrentClient {
     } catch (error) {
       console.log(error)
     }
+    return new Promise((resolve, reject) => {
+      resolve(newPath);
+    });
+  }
+
+  async moveFilesToShowsDirectory(torrent, show) {
+    const torrentName = await this.getFileNameOfMovie(torrent);
+
+    // there is a problem here; in certain scenarios only the movie/show is being downloaded.
+    let fileLocation;
+    if(torrent.name.endsWith('mp4') || torrent.name.endsWith('mkv')) {
+      fileLocation = `/${torrentName}`;
+    } else {
+      fileLocation = `/${torrent.name}/${torrentName}`;
+    }
+
+    const extension = torrentName.substring(torrentName.lastIndexOf('.'));
+    const oldPath = torrent.path + fileLocation;
+    const newPath = `${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}/${show.episodeNumber}: ${show.episodeName}${extension}`;
+
+    try {
+      await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}`);
+      await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}`);
+    } catch (e) {}
+
+
+    await fs.rename(oldPath, newPath);
+    await fs.remove(Helpers.tmpPath() + `/movies/${torrent.name}`);
     return new Promise((resolve, reject) => {
       resolve(newPath);
     });

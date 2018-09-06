@@ -6,7 +6,8 @@ import registerServiceWorker from './registerServiceWorker';
 import { init } from '@rematch/core'
 import * as models from './models/models'
 import {Provider} from "react-redux";
-
+import moment from 'moment';
+import 'moment/locale/nl';
 const store = init({
     models,
 });

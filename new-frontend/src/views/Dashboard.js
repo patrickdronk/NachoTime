@@ -5,6 +5,8 @@ import Movies from "./movies/Movies";
 import Movie from "./movies/Movie";
 import Ws from '@adonisjs/websocket-client'
 import MyProgress from "./movies/MyProgress"
+import Shows from "./series/Shows";
+import Show from "./series/Show";
 
 import('./Dashboard.css');
 const {Header, Sider, Content} = Layout;
@@ -52,7 +54,10 @@ class Dashboard extends Component {
           <Layout>
               <Sider
                 trigger={null}
-                collapsible
+                breakpoint="md"
+                collapsedWidth="0"
+                onBreakpoint={(broken) => { this.setState({collapsed: broken}) }}
+                onCollapse={(collapsed, type) => { console.log(collapsed, type); }}
                 collapsed={this.state.collapsed}
               >
                   <div className="logo"/>
@@ -60,6 +65,10 @@ class Dashboard extends Component {
                       <Menu.Item key="/movies">
                           <Icon type="user" />
                           <span>Movies</span>
+                      </Menu.Item>
+                      <Menu.Item key="/shows">
+                          <Icon type="user" />
+                          <span>Shows</span>
                       </Menu.Item>
                   </Menu>
               </Sider>
@@ -78,6 +87,8 @@ class Dashboard extends Component {
                   <Content style={{margin: '24px 16px', padding: 24, background: '#fff'}}>
                       <Route exact path={"/movies"} component={Movies}/>
                       <Route path={"/movies/:id"} component={Movie}/>
+                      <Route exact path={"/shows"} component={Shows}/>
+                      <Route path={"/shows/:id"} component={Show}/>
                   </Content>
               </Layout>
           </Layout>

@@ -18,6 +18,11 @@ const Route = use('Route');
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 });
+
+Route.get('/show/:imdb_id', 'ShowController.getShowDetails')
+Route.post('/show/download', 'ShowController.downloadEpisode')
+Route.get('/show/stream/:id', 'ShowController.streamEpisode');
+
 Route.post('/login', 'UserController.login');
 Route.post('/register', 'UserController.register')
 

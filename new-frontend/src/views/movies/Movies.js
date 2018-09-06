@@ -38,7 +38,7 @@ const genres = [
     'sporting-event',
     'suspense',
     'thriller',
-    'tv-movie',
+    'tv-show',
     'war',
     'western'
 ];
@@ -47,10 +47,9 @@ class Movies extends Component {
     state = {movies: [], query: '', searchResult: [], token: sessionStorage.getItem('token')};
 
     async componentWillMount() {
-
         const {data} = await axios.get("https://tv-v2.api-fetch.website/movies/1?sort=trending&order=-1");
         const {data: downloadedMovies} = await axios.get(`${url}/movies`, {
-            headers: { Authorization: "Bearer " + this.state.token }
+            headers: {Authorization: "Bearer " + this.state.token}
         });
 
         const movies = data.map(movie => {
@@ -79,7 +78,7 @@ class Movies extends Component {
         const genre = this.state.genre ? `&genre=${this.state.genre}` : '';
         const {data} = await axios.get(`https://tv-v2.api-fetch.website/movies/${page}?sort=trending&order=-1${genre}`);
         const {data: downloadedMovies} = await axios.get(`${url}/movies`, {
-            headers: { Authorization: "Bearer " + this.state.token }
+            headers: {Authorization: "Bearer " + this.state.token}
         });
 
         const movies = data.map(movie => {
@@ -96,7 +95,7 @@ class Movies extends Component {
 
     renderMovies = () => {
         return (
-          <div style={{height: '700px', overflow: 'auto'}}>
+          <div style={{height: '(100vh -300px)  ', overflow: 'auto'}}>
               <InfiniteScroll
                 pageStart={1}
                 loadMore={this.loadMore}
@@ -105,7 +104,7 @@ class Movies extends Component {
                 useWindow={false}
               >
                   <List
-                    grid={{gutter: 12, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 8}}
+                    grid={{gutter: 8, xs: 2, sm:3, md: 4, lg: 5, xxl: 8}}
                     dataSource={this.state.movies}
                     renderItem={movie => {
                         let opacity = 0.2;
@@ -172,7 +171,7 @@ class Movies extends Component {
         this.setState({genre, query: ''});
         const {data} = await axios.get(`https://tv-v2.api-fetch.website/movies/${1}?sort=trending&order=-1&genre=${genre}`);
         const {data: downloadedMovies} = await axios.get(`${url}/movies`, {
-            headers: { Authorization: "Bearer " + this.state.token }
+            headers: {Authorization: "Bearer " + this.state.token}
         });
 
         const movies = data.map(movie => {
@@ -189,45 +188,43 @@ class Movies extends Component {
 
     render() {
         return (
-          <div>
-              <Row>
-                  <Col>
-                      <Row>
-                          <Col>
-                              <h1>Movies</h1>
-                          </Col>
-                      </Row>
-                      <Row gutter={16} type="flex" justify="end">
-                          <Col xs={12} md={9} xl={5}>
-                              <Select defaultValue="all" onChange={this.genreChanged} style={{width: '100%'}}>
-                                  {
-                                      genres.map((genre) => {
-                                          return (
-                                            <Option key={genre} value={genre}>{genre}</Option>
-                                          )
-                                      })
-                                  }
-                              </Select>
-                          </Col>
-                          <Col xs={12} md={9} xl={5}>
-                              <Search
-                                value={this.state.query}
-                                onSearch={this.search}
-                                onChange={(e)=> this.setState({query: e.target.value})}
-                                enterButton
-                              />
-                          </Col>
-                      </Row>
-                      <Row>
-                          <div style={{marginTop: 15}}>
+          <Row>
+              <Col>
+                  <Row>
+                      <Col>
+                          <h1>Movies</h1>
+                      </Col>
+                  </Row>
+                  <Row gutter={16} type="flex" justify="end">
+                      <Col xs={24} md={9} xl={5}>
+                          <Select defaultValue="all" onChange={this.genreChanged} style={{width: '100%', marginBottom: 5}}>
                               {
-                                  this.state.searchResult.length > 0 ? this.renderSearchResults() : this.renderMovies()
+                                  genres.map((genre) => {
+                                      return (
+                                        <Option key={genre} value={genre}>{genre}</Option>
+                                      )
+                                  })
                               }
-                          </div>
-                      </Row>
-                  </Col>
-              </Row>
-          </div>
+                          </Select>
+                      </Col>
+                      <Col xs={24} md={9} xl={5}>
+                          <Search
+                            value={this.state.query}
+                            onSearch={this.search}
+                            onChange={(e) => this.setState({query: e.target.value})}
+                            enterButton
+                          />
+                      </Col>
+                  </Row>
+                  <Row>
+                      <div style={{marginTop: 15}}>
+                          {
+                              this.state.searchResult.length > 0 ? this.renderSearchResults() : this.renderMovies()
+                          }
+                      </div>
+                  </Row>
+              </Col>
+          </Row>
         );
     }
 }

@@ -27,6 +27,7 @@
     "@adonisjs/websocket": "^1.0.10",
     "axios": "^0.18.0",
     "fs-extra": "^6.0.0",
+    "moviedb-promise": "^1.2.6",
     "mysql": "^2.15.0",
     "opensubtitles-api": "^4.1.0",
     "pify": "^3.0.0",

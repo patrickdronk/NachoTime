@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const axios = require('axios');
 const OS = require('opensubtitles-api');
 const srt2vtt = require('srt-to-vtt');
+const OpenSubtitles = new OS('TemporaryUserAgent');
 const torrentService = use('TorrentService');
 const Movie = use('App/Models/Movie');
 
@@ -31,72 +32,69 @@ class MovieController {
   }
 
   async downloadMovie({request, response, params}) {
-    const {id} = params;
-    let movieInfo = await axios.get(`https://tv-v2.api-fetch.website/movie/${id}`);
-    movieInfo = movieInfo.data;
+    console.log('1');
+    let {data: movieInfo} = await axios.get(`https://tv-v2.api-fetch.website/movie/${params.id}`);
+
     let torrent;
     try {
       torrent = await torrentService.addTorrentByMagnetUri(movieInfo.torrents.en['720p'].url);
     } catch (error) {
       return response.status(409).send({message: "torrent already added, please wait"})
     }
-    const extension = await torrentService.getFileExtension(torrent);
-
     await torrentService.torrentDone(torrent, movieInfo);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
+    const extension = await torrentService.getFileExtension(torrent);
     await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
+    console.log(4)
     const movie = new Movie();
+    console.log(5)
+    console.log(id)
+    console.log(location)
+    console.log(`${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`)
     movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
     try {
       await movie.save();
-    } catch(e) {
+    } catch (e) {
       console.log(e)
     }
   }
 
   async downloadSubtitle(movieName, year, extension) {
-    console.log(movieName, year, extension);
-    let OpenSubtitles;
-    try {
-      OpenSubtitles = new OS('TemporaryUserAgent');
-    } catch (e) {
-      console.log(e)
-    }
-
+    console.log(2)
     let moviehash;
     try {
       const temp = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
       moviehash = temp.moviehash;
-    } catch(e) {console.log}
+    } catch (e) {
+      console.log
+    }
 
     let result = await OpenSubtitles.search({hash: moviehash});
 
-    console.log(result);
-    const subtitleUrl = result.en.url;
+    const subtitleUrl = result.en;
     const dutchSubtitleUrl = result.nl;
 
     let englishSubtitle;
     let dutchSubtitle;
     try {
-      englishSubtitle = await axios.get(subtitleUrl);
-      // dutch is not always optional so only get it if it's there
+      englishSubtitle = await axios.get(subtitleUrl.url);
+      await this.writeSubtitleToLocation(movieName, year, 'en', englishSubtitle);
+
+      // dutch is not always there so only get it if it is
       if (dutchSubtitleUrl) {
         dutchSubtitle = await axios.get(dutchSubtitleUrl.url);
+        await this.writeSubtitleToLocation(movieName, year, 'nl', dutchSubtitle);
       }
     } catch (e) {
       console.log(e)
     }
-    this.writeSubtitleToLocation(movieName, year, 'en', englishSubtitle);
-    if (dutchSubtitleUrl) {
-      this.writeSubtitleToLocation(movieName, year, 'nl', dutchSubtitle);
-    }
   }
 
   async writeSubtitleToLocation(movieName, year, lang, data) {
-    //
+    console.log(3);
     fs.writeFileSync(`${Helpers.appRoot()}/movies/${movieName} (${year})/${lang}.srt`, data.data);
 
     fs.createReadStream(`${Helpers.appRoot()}/movies/${movieName} (${year})/${lang}.srt`)

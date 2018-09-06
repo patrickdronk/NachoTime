@@ -17,7 +17,9 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "recharts": "^1.0.1"
+    "recharts": "^1.0.1",
+    "simple-google-cast-sender": "^1.0.0",
+    "videojs-chromecast": "^2.0.8"
   },
   "scripts": {
     "start": "react-app-rewired start",

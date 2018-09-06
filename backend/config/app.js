@@ -193,5 +193,7 @@ module.exports = {
       filename: 'adonis.log',
       level: 'info'
     }
-  }
+  },
+
+  tmdb_api_key: Env.get('TMDB_API_KEY')
 }
