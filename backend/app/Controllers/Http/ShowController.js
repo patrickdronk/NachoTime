@@ -2,6 +2,8 @@
 const tmdb = use('TMDB')
 const Episode = use('App/Models/Episode');
 const torrentService = use('TorrentService');
+const SubtitleService = use('SubtitleService')
+const Helpers = use('Helpers')
 
 const axios = require('axios')
 const movieDB = tmdb.MovieDB;
@@ -67,11 +69,17 @@ class ShowController {
     const torrent = await torrentService.addTorrentByMagnetUri(magnetUrl)
     await torrentService.torrentDone(torrent, {title: `${episodeName}`})
     const location = await torrentService.moveFilesToShowsDirectory(torrent, show)
+
+    const folderLocation = `${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}`
+    const fileName = `${show.episodeNumber}: ${show.episodeName}`
+    await SubtitleService.downloadSubtitle(location, folderLocation, fileName)
+
     const episode = new Episode();
     episode.id = episodeId
     episode.show_id = showId;
     episode.location = location;
-    episode.subtitle_location = '';
+    episode.subtitle_location = `${folderLocation}/${fileName}`;
+
     try {
       await episode.save()
     } catch(e) {
@@ -81,11 +89,16 @@ class ShowController {
 
   async streamEpisode({response, params}) {
     const {id} = params;
-    console.log(id);
     const episode = await Episode.findBy('id', id);
-    console.log(episode.location)
     response.download(episode.location);
   }
+
+  async streamSubtitle({request, response, params}) {
+    const {id, language} = params;
+    const episode = await Episode.findBy('id', id);
+    response.download(`${episode.subtitle_location}-${language}.vtt`);
+  }
+
 
   episodeWithoutActiveTorrents(episode) {
     const torrents = Object.values(episode.torrents).filter((torrent) => {

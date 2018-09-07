@@ -19,9 +19,8 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 });
 
-Route.get('/show/:imdb_id', 'ShowController.getShowDetails')
-Route.post('/show/download', 'ShowController.downloadEpisode')
-Route.get('/show/stream/:id', 'ShowController.streamEpisode');
+
+
 
 Route.post('/login', 'UserController.login');
 Route.post('/register', 'UserController.register')
@@ -33,6 +32,11 @@ Route
     Route.get('/movie/stream/:id', 'MovieController.streamMovie');
     Route.get('/movie/stream/subtitle/:id/:language', 'MovieController.streamSubtitle');
     Route.get('/download/:id', 'MovieController.downloadMovie');
+
+    Route.get('/show/:imdb_id', 'ShowController.getShowDetails')
+    Route.post('/show/download', 'ShowController.downloadEpisode')
+    Route.get('/show/stream/:id', 'ShowController.streamEpisode');
+    Route.get('/show/stream/subtitle/:id/:language', 'ShowController.streamSubtitle');
   })
   .middleware(['auth'])
 

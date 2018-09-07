@@ -18,7 +18,9 @@ class Show extends Component {
 
     async componentWillMount() {
         const {id} = this.props.match.params;
-        const {data} = await axios.get(`${url}/show/${id}`);
+        const {data} = await axios.get(`${url}/show/${id}`, {
+            headers: {Authorization: "Bearer " + this.state.token}
+        });
         this.setState({show: data, loading: false})
     }
 
@@ -34,7 +36,9 @@ class Show extends Component {
             episodeNumber: selectedEpisode.episode_number,
             episodeName: selectedEpisode.name
         };
-        await axios.post(`${url}/show/download`, body);
+        await axios.post(`${url}/show/download`, body, {
+            headers: {Authorization: "Bearer " + this.state.token}
+        });
     };
 
     render() {
@@ -71,7 +75,7 @@ class Show extends Component {
                                             style={{backgroundColor: 'rgba(0, 0, 0, 0.4)', border: '0px'}}>
                                           {show.seasons.map(season => {
                                               return (
-                                                <List.Item style={{color: 'white', border: '0px'}}
+                                                <List.Item key={season.name} style={{color: 'white', border: '0px'}}
                                                            onClick={() => this.setState({
                                                                selectedSeason: season,
                                                                selectedEpisode: undefined
@@ -89,7 +93,7 @@ class Show extends Component {
                                           {
                                               this.state.selectedSeason.episodes.map(episode => {
                                                   return (
-                                                    <List.Item style={{color: 'white', border: '0px'}}
+                                                    <List.Item key={episode.id} style={{color: 'white', border: '0px'}}
                                                                onClick={() => this.setState({selectedEpisode: episode})}>
                                                         {`Episode ${episode.episode_number}: ${episode.name}`}
                                                     </List.Item>
@@ -98,7 +102,6 @@ class Show extends Component {
                                           }
                                       </List>
                                       }
-
                                   </Col>
                                   <Col span={13}>
                                       {this.state.selectedEpisode &&
@@ -124,6 +127,25 @@ class Show extends Component {
                                                               controls
                                                               width={''}
                                                               height={''}
+                                                              config={{
+                                                                  file: {
+                                                                      tracks: [
+                                                                          {
+                                                                              kind: 'subtitles',
+                                                                              src: `${url}/show/stream/subtitle/${this.state.selectedEpisode.id}/en?token=${this.state.token}`,
+                                                                              srcLang: 'en',
+                                                                              default: true
+                                                                          },
+                                                                          {
+                                                                              kind: 'subtitles',
+                                                                              src: `${url}/show/stream/subtitle/${this.state.selectedEpisode.id}/nl?token=${this.state.token}`,
+                                                                              srcLang: 'nl',
+                                                                              default: true
+                                                                          },
+                                                                      ],
+                                                                      attributes: {crossOrigin: 'anonymous'}
+                                                                  },
+                                                              }}
                                                             />
                                                             : !_.isEmpty(this.state.selectedEpisode.torrent) &&
                                                             <Button onClick={this.download}

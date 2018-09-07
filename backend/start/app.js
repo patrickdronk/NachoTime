@@ -22,7 +22,8 @@ const providers = [
   '@adonisjs/framework/providers/ViewProvider',
 
   path.join(__dirname, '..', 'providers', 'TorrentService/provider'),
-  path.join(__dirname, '..', 'providers', 'TMDBService/provider')
+  path.join(__dirname, '..', 'providers', 'TMDBService/provider'),
+  path.join(__dirname, '..', 'providers', 'SubtitleService/provider')
 ]
 
 /*

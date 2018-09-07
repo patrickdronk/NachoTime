@@ -32,7 +32,6 @@ class MovieController {
   }
 
   async downloadMovie({request, response, params}) {
-    console.log('1');
     let {data: movieInfo} = await axios.get(`https://tv-v2.api-fetch.website/movie/${params.id}`);
 
     let torrent;
@@ -46,12 +45,7 @@ class MovieController {
     const extension = await torrentService.getFileExtension(torrent);
     await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
-    console.log(4)
     const movie = new Movie();
-    console.log(5)
-    console.log(id)
-    console.log(location)
-    console.log(`${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`)
     movie.imdb_id = id;
     movie.location = location;
     movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
@@ -63,7 +57,6 @@ class MovieController {
   }
 
   async downloadSubtitle(movieName, year, extension) {
-    console.log(2)
     let moviehash;
     try {
       const temp = await OpenSubtitles.hash(`${Helpers.appRoot()}/movies/${movieName} (${year})/${movieName}${extension}`);
