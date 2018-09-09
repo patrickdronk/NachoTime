@@ -43,7 +43,6 @@ class MovieController {
     await torrentService.torrentDone(torrent, movieInfo);
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
     const extension = await torrentService.getFileExtension(torrent);
-    await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
 
     const movie = new Movie();
     movie.imdb_id = id;
@@ -54,6 +53,8 @@ class MovieController {
     } catch (e) {
       console.log(e)
     }
+
+    await this.downloadSubtitle(movieInfo.title, movieInfo.year, extension);
   }
 
   async downloadSubtitle(movieName, year, extension) {
