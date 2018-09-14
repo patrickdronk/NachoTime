@@ -44,11 +44,11 @@ class MovieController {
     const location = await torrentService.moveFilesToMovieDirectory(torrent, movieInfo);
     const extension = await torrentService.getFileExtension(torrent);
 
-    const movie = new Movie();
-    movie.imdb_id = id;
-    movie.location = location;
-    movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
     try {
+      const movie = new Movie();
+      movie.imdb_id = params.id;
+      movie.location = location;
+      movie.subtitle_location = `${Helpers.appRoot()}/movies/${movieInfo.title} (${movieInfo.year})/`;
       await movie.save();
     } catch (e) {
       console.log(e)
