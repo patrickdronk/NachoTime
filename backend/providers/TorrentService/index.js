@@ -101,20 +101,21 @@ class TorrentClient {
     } else {
       fileLocation = `/${torrent.name}/${torrentName}`;
     }
-    fileLocation = fileLocation.replace('\'', '')
 
     const extension = torrentName.substring(torrentName.lastIndexOf('.'));
     const oldPath = torrent.path + fileLocation;
     const newPath = `${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}/${show.episodeNumber}: ${show.episodeName}${extension}`;
+    console.log('old: ' + oldPath)
+    console.log('new: ' + newPath)
 
     try {
       await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}`);
       await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}`);
+
+      await fs.rename(oldPath, newPath);
+      await fs.remove(Helpers.tmpPath() + `/movies/${torrent.name}`);
     } catch (e) {}
 
-
-    await fs.rename(oldPath, newPath);
-    await fs.remove(Helpers.tmpPath() + `/movies/${torrent.name}`);
     return new Promise((resolve, reject) => {
       resolve(newPath);
     });
