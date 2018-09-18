@@ -111,10 +111,16 @@ class TorrentClient {
     try {
       await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}`);
       await fs.mkdirSync(`${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}`);
+    } catch (e) {}
 
+    try {
       await fs.rename(oldPath, newPath);
       await fs.remove(Helpers.tmpPath() + `/movies/${torrent.name}`);
-    } catch (e) {}
+    } catch(e) {
+      console.log('failed on rename');
+      console.log(e)
+    }
+
 
     return new Promise((resolve, reject) => {
       resolve(newPath);
