@@ -72,7 +72,7 @@ class ShowController {
 
     const folderLocation = `${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}`
     const fileName = `${show.episodeNumber}: ${show.episodeName}`
-    await SubtitleService.downloadSubtitle(location, folderLocation, fileName)
+    SubtitleService.downloadSubtitle(location, folderLocation, fileName)
 
     const episode = new Episode();
     episode.id = episodeId

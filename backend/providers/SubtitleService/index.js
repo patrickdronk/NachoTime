@@ -7,13 +7,13 @@ const fs = require('fs-extra');
 
 
 class SubtitleService {
-  constructor () {
+  constructor() {
     this.OpenSubtitles = new OS('TemporaryUserAgent');
   }
 
   async downloadSubtitle(pathToFile, folderLocation, fileName) {
-      const temp = await this.OpenSubtitles.hash(pathToFile);
-      const hash = temp.moviehash;
+    const temp = await this.OpenSubtitles.hash(pathToFile);
+    const hash = temp.moviehash;
 
     let searchResult = await this.OpenSubtitles.search({hash});
 
