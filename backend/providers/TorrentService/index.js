@@ -104,7 +104,7 @@ class TorrentClient {
 
     const extension = torrentName.substring(torrentName.lastIndexOf('.'));
     let oldPath = torrent.path + fileLocation;
-    oldPath = oldPath.replace('[', '\[').replace(']', '\]');
+    oldPath = oldPath.escape();
     const newPath = `${Helpers.appRoot()}/shows/${show.name}/Season ${show.season}/${show.episodeNumber}: ${show.episodeName}${extension}`;
     console.log('old: ' + oldPath)
     console.log('new: ' + newPath)
