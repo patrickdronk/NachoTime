@@ -101,6 +101,7 @@ class TorrentClient {
     } else {
       fileLocation = `/${torrent.name}/${torrentName}`;
     }
+    fileLocation = fileLocation.replace('\'', '')
 
     const extension = torrentName.substring(torrentName.lastIndexOf('.'));
     const oldPath = torrent.path + fileLocation;
